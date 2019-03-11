@@ -1,0 +1,4 @@
+POST /account          controllers.AccountController.open
+GET  /account/:id      controllers.AccountController.read(id: Long)
+POST /account/transfer controllers.AccountController.transfer
+POST /account/interest controllers.AccountController.applyInterest
