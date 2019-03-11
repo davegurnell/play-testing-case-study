@@ -32,9 +32,24 @@ class PasswordDatabase @Inject() (
   }
 
   def setPassword(accountId: Long, password: String): DBIO[Unit] = {
-    PasswordTable
-      .filter(_.accountId === accountId)
-      .insertOrUpdate(PasswordRow(accountId, password))
+    def exists: DBIO[Boolean] =
+      PasswordTable
+        .filter(_.accountId === accountId)
+        .length
+        .result
+        .map(_ > 0)
+
+    def insert: DBIO[Int] =
+      PasswordTable += PasswordRow(accountId, password)
+
+    def update: DBIO[Int] =
+      PasswordTable
+        .filter(_.accountId === accountId)
+        .map(_.password)
+        .update(password)
+
+    exists
+      .flatMap(exists => if(exists) update else insert)
       .map(_ => ())
   }
 
