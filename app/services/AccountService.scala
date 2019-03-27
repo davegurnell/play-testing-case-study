@@ -3,18 +3,16 @@ package services
 import databases.{AccountDatabase, PasswordDatabase}
 import javax.inject._
 import models.Account
-import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import play.api.db.slick._
+import slick.basic.DatabaseConfig
 import slick.dbio.DBIO
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class AccountService @Inject()(
-  val dbConfigProvider: DatabaseConfigProvider,
-  val accountDatabase: AccountDatabase,
-  val passwordDatabase: PasswordDatabase,
-)(implicit ec: ExecutionContext) extends HasDatabaseConfigProvider[JdbcProfile] {
+class AccountService @Inject()(val dbConfig: DatabaseConfig[JdbcProfile], val accountDatabase: AccountDatabase, val passwordDatabase: PasswordDatabase)(implicit ec: ExecutionContext) {
+  import dbConfig._
 
   def open(password: String, balance: Double): Future[Account] = {
     db.run {

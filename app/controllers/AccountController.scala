@@ -8,16 +8,11 @@ import services.AccountService
 import scala.concurrent.ExecutionContext
 
 case class OpenAccountRequest(password: String, balance: Double)
-
 case class TransferRequest(fromId: Long, toId: Long, amount: Double)
-
 case class InterestRequest(multiplier: Double)
 
 @Singleton
-class AccountController @Inject()(
-  val cc: ControllerComponents,
-  val accountService: AccountService,
-)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class AccountController @Inject()(val cc: ControllerComponents, val accountService: AccountService)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   implicit val openAccountRequestReads: Reads[OpenAccountRequest] =
     Json.reads

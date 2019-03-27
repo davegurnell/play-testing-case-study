@@ -2,15 +2,14 @@ package databases
 
 import javax.inject._
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class PasswordDatabase @Inject() (
-  val dbConfigProvider: DatabaseConfigProvider
-)(implicit ec: ExecutionContext) extends HasDatabaseConfigProvider[JdbcProfile] {
-  import profile.api._
+class PasswordDatabase @Inject() (val dbConfig: DatabaseConfig[JdbcProfile])(implicit ec: ExecutionContext) {
+  import dbConfig.profile.api._
 
   case class PasswordRow(id: Long, password: String)
 
